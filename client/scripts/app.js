@@ -71,17 +71,23 @@ app.clearMessages = function() {
 }
 
 app.addMessage = function(message) {
-  var groupDiv = $('<div></div>');
+  var groupDiv = $('<div class="group"></div>');
 
   var messageDiv = $('<span></span>');
-  messageDiv.text(message.text);
+  messageDiv.text(": "+message.text);
 
   var nameDiv = $('<span></span>');
-  nameDiv.text(message.username+": ");
+  nameDiv.text(message.username);
   nameDiv.addClass("username");
   nameDiv.on('click', function() {
     app.addFriend(message.username);
   });
+
+  for (var key in app.friends) {
+    if (message.username === key) {
+      groupDiv.addClass('friend');
+    }
+  }
 
   groupDiv.append(nameDiv);
   groupDiv.append(messageDiv);
@@ -96,6 +102,12 @@ app.addRoom = function(room) {
                                                                                  
 app.addFriend = function(friend) {
   this.friends[friend] = friend;
+  // add a class to groupdiv with matching friend
+  $(".group").each(function(idx, group) {
+    if ($(group).find('.username').text() === friend) {
+      $(group).addClass('friend');
+    }
+  });
 }
 
 app.handleSubmit = function(message) {
